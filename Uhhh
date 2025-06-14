@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JARVIS - Iron Man Suit MK-85</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+    body {
+      background: radial-gradient(circle, #0a0a0a 30%, #000000 100%);
+      color: #00f0ff;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      box-shadow: 0 0 20px #00f0ff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      font-size: 3.5rem;
+      color: #ff3131;
+      text-shadow: 0 0 20px red;
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px red; }
+      to { text-shadow: 0 0 20px #ff3131, 0 0 30px red; }
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .model-section iframe {
+      width: 100%;
+      height: 600px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px #00f0ff;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .info-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.2rem;
+      border-left: 6px solid #00f0ff;
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 12px #00f0ff;
+      transition: all 0.3s ease;
+    }
+    .info-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00f0ff;
+    }
+    .terminal {
+      background: #0f0f0f;
+      padding: 1.5rem;
+      border-radius: 12px;
+      height: 300px;
+      overflow-y: auto;
+      font-size: 1rem;
+      color: #0f0;
+      box-shadow: 0 0 20px lime;
+      font-family: monospace;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    button {
+      padding: 0.8rem 1.7rem;
+      background: #00f0ff;
+      color: black;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      box-shadow: 0 0 12px cyan;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0099cc;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Iron Man Suit MK-85 - Jarvis Interface</h1>
+  </header>
+  <div class="container">
+    <div class="model-section">
+      <iframe title="Iron Man MK85" frameborder="0" allowfullscreen
+        allow="autoplay; fullscreen; xr-spatial-tracking"
+        src="https://sketchfab.com/models/78bb8db3a13244f7bcb8c566a3a38e7a/embed">
+      </iframe>
+    </div><div class="info-grid">
+  <div class="info-card"><strong>Armor Material:</strong> Nanotechnology fused with Vibranium mesh for adaptive defense.</div>
+  <div class="info-card"><strong>Flight System:</strong> Advanced repulsors with adaptive stabilization and noise-cancelled boosters.</div>
+  <div class="info-card"><strong>Weapons Arsenal:</strong> Energy Blades, Micro-Rockets, Nano-Spears, Mini-Missiles, and more.</div>
+  <div class="info-card"><strong>AI Intelligence:</strong> Hybrid J.A.R.V.I.S. / F.R.I.D.A.Y. system with multilingual voice recognition and emotional context.</div>
+  <div class="info-card"><strong>Diagnostics:</strong> Self-healing nanobots & real-time internal monitoring with 98.4% system uptime.</div>
+  <div class="info-card"><strong>Energy Source:</strong> Triple arc reactor matrix with infinite core backup.</div>
+</div>
+
+<div class="terminal" id="terminal">
+  <p>Initializing JARVIS OS...</p>
+</div>
+
+<div class="controls">
+  <button onclick="startListening()">🎙️ Activate JARVIS</button>
+  <button onclick="clearTerminal()">🧹 Clear Console</button>
+</div>
+
+  </div>
+  <footer>
+    &copy; 2025 Stark Industries | Powered by OpenAI & Next-Gen Nanotech Labs
+  </footer>  <script>
+    const terminal = document.getElementById('terminal');
+
+    function logToTerminal(text) {
+      const p = document.createElement('p');
+      p.textContent = text;
+      terminal.appendChild(p);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function clearTerminal() {
+      terminal.innerHTML = '<p>Console cleared...</p>';
+    }
+
+    function startListening() {
+      if (!('webkitSpeechRecognition' in window)) {
+        logToTerminal("Speech recognition not supported in this browser.");
+        return;
+      }
+
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+      logToTerminal("Listening for command...");
+
+      recognition.onresult = (event) => {
+        const command = event.results[0][0].transcript;
+        logToTerminal("Command: " + command);
+        handleCommand(command.toLowerCase());
+      };
+
+      recognition.onerror = (event) => {
+        logToTerminal("Error: " + event.error);
+      };
+    }
+
+    function handleCommand(command) {
+      if (command.includes("repulsor")) {
+        logToTerminal("Repulsor system charged and ready.");
+      } else if (command.includes("diagnostic")) {
+        logToTerminal("Running diagnostics...");
+        setTimeout(() => logToTerminal("All subsystems optimal."), 1500);
+      } else if (command.includes("shutdown")) {
+        logToTerminal("Shutdown protocol restricted by user override.");
+      } else {
+        logToTerminal("Unknown command, please try again.");
+      }
+    }
+
+    setTimeout(() => logToTerminal("Suit systems syncing with StarkNet."), 1000);
+    setTimeout(() => logToTerminal("3D environment matrix calibrated."), 2000);
+    setTimeout(() => logToTerminal("Ready for deployment. Awaiting input..."), 3000);
+  </script></body>
+</html>
